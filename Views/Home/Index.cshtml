@@ -1,8 +1,78 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model List<InfoDengue.Models.Relatorio>
+@{
+    ViewData["Title"] = "Consulta Dengue";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h2>Consulta Dengue</h2>
+
+<form asp-action="ConsultarDadosApi" method="post">
+    <div class="mb-3">
+        <label for="CodigoIBGE" class="form-label">Código IBGE:</label>
+        <input type="text" id="CodigoIBGE" name="CodigoIBGE" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label for="Arbovirose" class="form-label">Tipo de Doença:</label>
+        <select id="Arbovirose" name="Arbovirose" class="form-select" required>
+            <option value="dengue">Dengue</option>
+            <option value="chikungunya">Chikungunya</option>
+            <option value="zika">Zika</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="SemanaInicio" class="form-label">Semana Início:</label>
+        <input type="number" id="SemanaInicio" name="SemanaInicio" class="form-control" min="1" max="53" required />
+    </div>
+
+    <div class="mb-3">
+        <label for="SemanaFim" class="form-label">Semana Fim:</label>
+        <input type="number" id="SemanaFim" name="SemanaFim" class="form-control" min="1" max="53" required />
+    </div>
+
+    <div class="mb-3">
+        <label for="AnoInicio" class="form-label">Ano Início:</label>
+        <input type="number" id="AnoInicio" name="AnoInicio" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label for="AnoFim" class="form-label">Ano Fim:</label>
+        <input type="number" id="AnoFim" name="AnoFim" class="form-control" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Pesquisar</button>
+</form>
+
+@if (Model != null && Model.Any())
+{
+    <h3>Resultados</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Semana</th>
+                <th>Casos Estimados</th>
+                <th>Casos Confirmados</th>
+                <th>R-T</th>
+                <th>Temperatura Média</th>
+                <th>População</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.SE</td>
+                    <td>@item.casos_est</td>
+                    <td>@item.casos</td>
+                    <td>@item.Rt</td>
+                    <td>@item.tempmed</td>
+                    <td>@item.pop</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Nenhum dado encontrado.</p>
+}
