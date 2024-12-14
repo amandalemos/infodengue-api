@@ -1,78 +1,211 @@
-﻿@model List<InfoDengue.Models.Relatorio>
-@{
-    ViewData["Title"] = "Consulta Dengue";
+﻿@{
+    ViewData["Title"] = "Consulta de Dados de Alertas";
 }
 
-<h2>Consulta Dengue</h2>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
 
-<form asp-action="ConsultarDadosApi" method="post">
-    <div class="mb-3">
-        <label for="CodigoIBGE" class="form-label">Código IBGE:</label>
-        <input type="text" id="CodigoIBGE" name="CodigoIBGE" class="form-control" required />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>@ViewData["Title"]</h2>
+
+  
+        <form id="consultaForm" method="post">
+        
+            <div class="form-group">
+                <label for="solicitante">Nome do Solicitante:</label>
+                <input type="text" class="form-control" id="solicitante" name="solicitante" required />
+            </div>
+            <div class="form-group mt-3">
+                <label for="cpf">CPF:</label>
+                <input type="text" class="form-control" id="cpf" name="cpf" required />
+            </div>
+
+            <div id="filtroCampos" style="display:none;" class="animate__animated animate__fadeInUp">
+                <hr />
+                <div class="form-group">
+                    <label for="CodigoIBGE">Código IBGE:</label>
+                    <input type="text" class="form-control" id="CodigoIBGE" name="CodigoIBGE" required />
+                </div>
+                <div class="form-group mt-3">
+                    <label for="Arbovirose">Arbovirose:</label>
+                    <select class="form-control" id="Arbovirose" name="Arbovirose" required>
+                        <option value="dengue">Dengue</option>
+                        <option value="chikungunya">Chikungunya</option>
+                        <option value="zika">Zika</option>
+                    </select>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="SemanaInicio">Semana Início:</label>
+                    <input type="number" class="form-control" id="SemanaInicio" name="SemanaInicio" min="1" max="53" required />
+                </div>
+                <div class="form-group mt-3">
+                    <label for="SemanaFim">Semana Fim:</label>
+                    <input type="number" class="form-control" id="SemanaFim" name="SemanaFim" min="1" max="53" required />
+                </div>
+                <div class="form-group mt-3">
+                    <label for="AnoInicio">Ano Início:</label>
+                    <select class="form-control" id="AnoInicio" name="AnoInicio" required>
+                    </select>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="AnoFim">Ano Fim:</label>
+                    <select class="form-control" id="AnoFim" name="AnoFim" required>
+                    </select>
+                </div>
+            </div>
+
+   
+            <button type="submit" class="btn btn-primary mt-3" id="submitBtn" disabled>Consultar</button>
+        </form>
+
+        <div class="mt-4">
+            <!-- <h4>URL Gerada:</h4>
+            <p id="urlDisplay"></p> -->
+        </div>
+
+
+        <div id="resultados" class="mt-4"></div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-    <div class="mb-3">
-        <label for="Arbovirose" class="form-label">Tipo de Doença:</label>
-        <select id="Arbovirose" name="Arbovirose" class="form-select" required>
-            <option value="dengue">Dengue</option>
-            <option value="chikungunya">Chikungunya</option>
-            <option value="zika">Zika</option>
-        </select>
-    </div>
+    <script>
+        function exibirTabela(dados) {
+            var tabelaHtml = "<table class='table table-striped'>";
+            tabelaHtml += "<thead><tr><th>SE</th><th>Casos</th><th>Rt</th><th>Temp Máxima</th><th>Umidade Máxima</th></tr></thead><tbody>";
 
-    <div class="mb-3">
-        <label for="SemanaInicio" class="form-label">Semana Início:</label>
-        <input type="number" id="SemanaInicio" name="SemanaInicio" class="form-control" min="1" max="53" required />
-    </div>
+            dados.forEach(function(item) {
+                tabelaHtml += `<tr>
+                    <td>${item.SE}</td>
+                    <td>${item.casos}</td>
+                    <td>${item.Rt}</td>
+                    <td>${item.tempmax}</td>
+                    <td>${item.umidmax}</td>
+                </tr>`;
+            });
 
-    <div class="mb-3">
-        <label for="SemanaFim" class="form-label">Semana Fim:</label>
-        <input type="number" id="SemanaFim" name="SemanaFim" class="form-control" min="1" max="53" required />
-    </div>
+            tabelaHtml += "</tbody></table>";
+            $('#resultados').html(tabelaHtml); // Substitui o conteúdo da div com a ID "resultados"
+        }
 
-    <div class="mb-3">
-        <label for="AnoInicio" class="form-label">Ano Início:</label>
-        <input type="number" id="AnoInicio" name="AnoInicio" class="form-control" required />
-    </div>
+        // Função para verificar se os campos Nome e CPF estão preenchidos
+        function verificarCampos() {
+            var nomePreenchido = $('#solicitante').val() !== '';
+            var cpfPreenchido = $('#cpf').val() !== '';
 
-    <div class="mb-3">
-        <label for="AnoFim" class="form-label">Ano Fim:</label>
-        <input type="number" id="AnoFim" name="AnoFim" class="form-control" required />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Pesquisar</button>
-</form>
-
-@if (Model != null && Model.Any())
-{
-    <h3>Resultados</h3>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Semana</th>
-                <th>Casos Estimados</th>
-                <th>Casos Confirmados</th>
-                <th>R-T</th>
-                <th>Temperatura Média</th>
-                <th>População</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.SE</td>
-                    <td>@item.casos_est</td>
-                    <td>@item.casos</td>
-                    <td>@item.Rt</td>
-                    <td>@item.tempmed</td>
-                    <td>@item.pop</td>
-                </tr>
+            // Se ambos os campos estiverem preenchidos, exibe os campos adicionais
+            if (nomePreenchido && cpfPreenchido) {
+                $('#filtroCampos').show(); // Exibe os campos de filtro
+            } else {
+                $('#filtroCampos').hide(); // Esconde os campos de filtro
             }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>Nenhum dado encontrado.</p>
-}
+
+            // Habilita o botão de envio somente se todos os campos obrigatórios estiverem preenchidos
+            var todosPreenchidos = nomePreenchido && cpfPreenchido &&
+                                   $('#CodigoIBGE').val() !== '' && $('#Arbovirose').val() !== '' &&
+                                   $('#SemanaInicio').val() !== '' && $('#SemanaFim').val() !== '' &&
+                                   $('#AnoInicio').val() !== '' && $('#AnoFim').val() !== '';
+
+            $('#submitBtn').prop('disabled', !todosPreenchidos); // Habilita ou desabilita o botão
+        }
+
+        // Chama a função de verificação sempre que os campos Nome ou CPF forem preenchidos
+        $('#solicitante, #cpf').on('input', function () {
+            verificarCampos();
+        });
+
+        // Chamar a função updateUrl ao mudar qualquer valor nos campos
+        $('#solicitante, #cpf, #CodigoIBGE, #Arbovirose, #SemanaInicio, #SemanaFim, #AnoInicio, #AnoFim').on('input change', function () {
+            updateUrl();
+            verificarCampos(); // Verifica se todos os campos estão preenchidos para habilitar o botão
+        });
+
+        // Exibir a URL gerada dinamicamente
+        function updateUrl() {
+            var solicitante = $('#solicitante').val();
+            var cpf = $('#cpf').val();
+            var codigoIBGE = $('#CodigoIBGE').val();
+            var arbovirose = $('#Arbovirose').val();
+            var semanaInicio = $('#SemanaInicio').val();
+            var semanaFim = $('#SemanaFim').val();
+            var anoInicio = $('#AnoInicio').val();
+            var anoFim = $('#AnoFim').val();
+
+            var url = `https://info.dengue.mat.br/api/alertcity?geocode=${codigoIBGE}&disease=${arbovirose}&format=json&ew_start=${semanaInicio}&ew_end=${semanaFim}&ey_start=${anoInicio}&ey_end=${anoFim}`;
+            $('#urlDisplay').text(url);
+        }
+
+        $('#consultaForm').on('submit', function (e) {
+            e.preventDefault(); // Evita o envio normal do formulário
+
+            var solicitante = $('#solicitante').val();
+            var cpf = $('#cpf').val();
+            var codigoIBGE = $('#CodigoIBGE').val();
+            var arbovirose = $('#Arbovirose').val();
+            var semanaInicio = $('#SemanaInicio').val();
+            var semanaFim = $('#SemanaFim').val();
+            var anoInicio = $('#AnoInicio').val();
+            var anoFim = $('#AnoFim').val();
+
+            // URL do proxy no seu servidor
+            var url = `/Home/ConsultarDadosApi?codigoIBGE=${codigoIBGE}&arbovirose=${arbovirose}&semanaInicio=${semanaInicio}&semanaFim=${semanaFim}&anoInicio=${anoInicio}&anoFim=${anoFim}`;
+
+            // Fazendo a requisição à API via proxy
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function(response) {
+                    exibirTabela(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Erro ao fazer requisição:", error);
+                    alert('Erro ao fazer a requisição para a API.');
+                }
+            });
+        });
+
+                // ANOS
+            // Função para preencher os selects com os anos de 1900 a 2024 e selecionar o ano 2024
+        function preencherAnos() {
+            const anoInicioSelect = document.getElementById('AnoInicio');
+            const anoFimSelect = document.getElementById('AnoFim');
+
+            // Preenche ambos os selects com anos de 1900 a 2024
+            for (let i = 1900; i <= 2024; i++) {
+                const optionInicio = document.createElement('option');
+                optionInicio.value = i;
+                optionInicio.textContent = i;
+                anoInicioSelect.appendChild(optionInicio);
+
+                // Seleciona o ano 2024 por padrão
+                if (i === 2024) {
+                    optionInicio.selected = true;
+                }
+
+                const optionFim = document.createElement('option');
+                optionFim.value = i;
+                optionFim.textContent = i;
+                anoFimSelect.appendChild(optionFim);
+
+                // Seleciona o ano 2024 por padrão
+                if (i === 2024) {
+                    optionFim.selected = true;
+                }
+            }
+        }
+
+        // Chama a função para preencher os selects quando a página carregar
+        preencherAnos();
+
+
+    </script>
+</body>
+</html>

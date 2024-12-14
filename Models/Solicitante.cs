@@ -5,7 +5,7 @@ namespace InfoDengue.Models
 {
     public class Solicitante
     {
-        public int Id { get; set; }  // Chave primária auto incremento
+        public int id { get; set; }  // Chave primária auto incremento
 
         [Required]
         [StringLength(255)]

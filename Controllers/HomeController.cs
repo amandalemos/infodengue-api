@@ -16,62 +16,24 @@ namespace InfoDengue.Controllers
             _httpClient = httpClient;
         }
 
-        // Ação para exibir o formulário (GET)
+
         public IActionResult Index()
         {
             return View();
         }
 
 
-
-
-        [HttpPost]
-        public async Task<IActionResult> ConsultarDadosApi(Relatorio filtro)
+        public async Task<IActionResult> ConsultarDadosApi(string codigoIBGE, string arbovirose, int semanaInicio, int semanaFim, int anoInicio, int anoFim)
         {
-            try
-            {
-                // Monta a URL da API de alertas com base nos filtros
-                string apiUrl = $"https://info.dengue.mat.br/api/alertcity?" +
-                                 $"geocode={filtro.CodigoIBGE}&" +  // Acessando a nova propriedade
-                                 $"disease={filtro.Arbovirose}&" +  // Acessando a nova propriedade
-                                 $"format=json&" +
-                                 $"ew_start={filtro.SemanaInicio}&" +  // Acessando a nova propriedade
-                                 $"ew_end={filtro.SemanaFim}&" +  // Acessando a nova propriedade
-                                 $"ey_start={filtro.AnoInicio}&" +  // Acessando a nova propriedade
-                                 $"ey_end={filtro.AnoFim}";  // Acessando a nova propriedade
+            // Construindo a URL da API
+            var url = $"https://info.dengue.mat.br/api/alertcity?geocode={codigoIBGE}&disease={arbovirose}&format=json&ew_start={semanaInicio}&ew_end={semanaFim}&ey_start={anoInicio}&ey_end={anoFim}";
 
-                // Faz a requisição à API do servidor backend para evitar bloqueios CORS no frontend
-                var response = await _httpClient.GetStringAsync(apiUrl);
+            // Fazendo a requisição à API externa
+            var response = await _httpClient.GetStringAsync(url);
 
-                // Verificando o conteúdo da resposta antes de tentar deserializar
-                if (string.IsNullOrWhiteSpace(response))
-                {
-                    return Json(new { success = false, message = "A resposta da API está vazia." });
-                }
-
-                // Log da resposta para verificar o que está sendo retornado pela API
-                Console.WriteLine("Resposta da API: " + response);
-
-                // Tenta deserializar o resultado diretamente como um array de objetos Relatorio
-                var data = JsonConvert.DeserializeObject<List<Relatorio>>(response);
-
-                // Se a consulta retornar dados, exibe no formulário, caso contrário, exibe uma mensagem
-                if (data != null && data.Count > 0)
-                {
-                    return Json(new { success = true, data = data });
-                }
-                else
-                {
-                    return Json(new { success = false, message = "Nenhum relatório encontrado para os parâmetros fornecidos." });
-                }
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = $"Erro ao consultar a API: {ex.Message}" });
-            }
+            // Retornando a resposta da API
+            return Content(response, "application/json");
         }
-
-
 
 
 

@@ -28,13 +28,13 @@
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\InfoDengue.x9tei2tkl6.bundle.scp.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-Swqk7fftoWrVvGk4c6hpmwuJQ8ruTT/Pl45VqZwIxO8="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"1128"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022Swqk7fftoWrVvGk4c6hpmwuJQ8ruTT/Pl45VqZwIxO8=\u0022"},{"Name":"Last-Modified","Value":"Sat, 14 Dec 2024 05:40:27 GMT"}]]]></ResponseHeaders>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"1128"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022Swqk7fftoWrVvGk4c6hpmwuJQ8ruTT/Pl45VqZwIxO8=\u0022"},{"Name":"Last-Modified","Value":"Sat, 14 Dec 2024 07:29:23 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/InfoDengue/InfoDengue.x9tei2tkl6.bundle.scp.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\InfoDengue.x9tei2tkl6.bundle.scp.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"x9tei2tkl6"},{"Name":"integrity","Value":"sha256-Swqk7fftoWrVvGk4c6hpmwuJQ8ruTT/Pl45VqZwIxO8="},{"Name":"label","Value":"_content/InfoDengue/InfoDengue.bundle.scp.css"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"1128"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022Swqk7fftoWrVvGk4c6hpmwuJQ8ruTT/Pl45VqZwIxO8=\u0022"},{"Name":"Last-Modified","Value":"Sat, 14 Dec 2024 05:40:27 GMT"}]]]></ResponseHeaders>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"1128"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022Swqk7fftoWrVvGk4c6hpmwuJQ8ruTT/Pl45VqZwIxO8=\u0022"},{"Name":"Last-Modified","Value":"Sat, 14 Dec 2024 07:29:23 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/InfoDengue/js/site.js">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\js\site.js'))</AssetFile>
